@@ -20,8 +20,7 @@ DIGIT2 = 16
 DIGIT3 = 20
 DIGIT4 = 21
 
-# 定义按钮输入的GPIO口
-btn = 27
+
 
 RPi.GPIO.setmode(RPi.GPIO.BCM)
 
@@ -43,7 +42,6 @@ RPi.GPIO.output(DIGIT2, True)
 RPi.GPIO.output(DIGIT3, True)
 RPi.GPIO.output(DIGIT4, True)
 
-RPi.GPIO.setup(btn, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_UP)
 
 # 指定no(1-4)号数码管显示数字num(0-9)，第三个参数是显示不显示小数点（true/false）
 def showDigit(no, num, showDotPoint):
@@ -156,10 +154,6 @@ def showDigit(no, num, showDotPoint):
 try:
 	t=0.005
 	while True:
-		# 按钮按下时显示日期，否则显示时间
-		# 为了区别左右的数字，让第二个数码管的小数点显示出来
-		#（本来应该是一个冒号，我们这个数码管没有，就用小数点代替了）
-		if (RPi.GPIO.input(btn) == 1):
 			time.sleep(t)
 			showDigit(1, int(time.strftime("%H",time.localtime(time.time()))) / 10, False)
 			time.sleep(t)
@@ -168,15 +162,6 @@ try:
 			showDigit(3, int(time.strftime("%M",time.localtime(time.time()))) / 10, False)
 			time.sleep(t)
 			showDigit(4, int(time.strftime("%M",time.localtime(time.time()))) % 10, False)
-		else:
-			time.sleep(t)
-			showDigit(1, int(time.strftime("%m",time.localtime(time.time()))) / 10, False)
-			time.sleep(t)
-			showDigit(2, int(time.strftime("%m",time.localtime(time.time()))) % 10, True)
-			time.sleep(t)
-			showDigit(3, int(time.strftime("%d",time.localtime(time.time()))) / 10, False)
-			time.sleep(t)
-			showDigit(4, int(time.strftime("%d",time.localtime(time.time()))) % 10, False)
 			
 except KeyboardInterrupt:
 	pass
